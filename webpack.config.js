@@ -45,6 +45,9 @@ var commonConf = {
     descriptionFiles: ["package.json"],
     extensions: [".tsx", ".ts", ".js", ".styl", ".pug", ".css"]
   },
+  externals: {
+    angular: 'angular'
+  },
   devServer: {
     hot: true,
     inline: true,

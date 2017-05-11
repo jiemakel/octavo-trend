@@ -1,5 +1,9 @@
 import * as angular from 'angular'
 
+import 'angular-ui-router'
+import 'angular-animate'
+import 'angular-ui-bootstrap'
+
 import './styles/main.styl'
 // Register modules
 import './services'
