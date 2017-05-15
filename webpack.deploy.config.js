@@ -6,7 +6,7 @@ var GhPagesWebpackPlugin = require('gh-pages-webpack-plugin');
 
 var commonConf = require('./webpack.common.config.js');
 commonConf.watch = false
-commonConf.output.path: path.join(__dirname + '/dist')
+commonConf.output.path = path.join(__dirname + '/dist')
 
 module.exports = [ Object.assign({
   name: 'ui',

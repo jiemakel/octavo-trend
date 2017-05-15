@@ -4,7 +4,7 @@ var HtmlWebpackPlugin = require('html-webpack-plugin');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 var commonConf = require('./webpack.common.config.js');
-commonConf.output.path: path.join(__dirname + '/dist-dev')
+commonConf.output.path = path.join(__dirname + '/dist-dev')
 
 module.exports = [ Object.assign({
   name: 'ui',
