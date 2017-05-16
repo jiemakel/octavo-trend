@@ -11,6 +11,7 @@ export class PlotlyComponentController implements angular.IComponentController {
   public data: Partial<Plotly.Data>[] = []
   public layout: Partial<Plotly.Layout>
   public config: Partial<Plotly.Config>
+  /* @ngInject */
   constructor(private $element: angular.IAugmentedJQuery) {
   }
   public $onChanges(changes: IPlotlyComponentBindingChanges): void {

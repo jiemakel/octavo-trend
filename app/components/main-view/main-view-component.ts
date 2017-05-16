@@ -32,10 +32,12 @@ export class MainViewComponentController implements angular.IComponentController
   public attrLength: number
   public query: string
   public comparisonQuery: string
+  private error: string
+  public queryRunning: boolean = false
   private data: Partial<Plotly.Data>[]
   private layout: any // Partial<Plotly.Layout>
-  public plotDocFreq: boolean = true
-  public plotRelative: boolean = true
+  public plotTermFreq: boolean = false
+  public plotAbsolute: boolean = false
   public sampleAttrs: (string|Date)[]
   public uiOnParamsChanged(params: IMainViewParams): void {
     if (params.endpoint && this.endpoint !== params.endpoint) {
@@ -55,6 +57,8 @@ export class MainViewComponentController implements angular.IComponentController
   }
   public runQuery(): void {
     this.$state.go('main', this)
+    this.error = undefined
+    this.queryRunning = true
     let q1 = this.$http.post(this.endpoint + 'termStats', this.$httpParamSerializer({
       attr:this.attr,
       attrLength:this.attrLength !== -1 ? this.attrLength : undefined,
@@ -62,7 +66,7 @@ export class MainViewComponentController implements angular.IComponentController
     }),{
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
     }) as angular.IHttpPromise<IResults>
-    let q2 = this.plotRelative ? this.$http.post(this.endpoint + 'termStats', this.$httpParamSerializer({
+    let q2 = !this.plotAbsolute ? this.$http.post(this.endpoint + 'termStats', this.$httpParamSerializer({
       attr:this.attr,
       attrLength:this.attrLength !== -1 ? this.attrLength : undefined,
       query:this.comparisonQuery
@@ -71,6 +75,7 @@ export class MainViewComponentController implements angular.IComponentController
     }) as angular.IHttpPromise<IResults> : this.$q.resolve(null)
     this.$q.all([q1,q2]).then(
       (responses: angular.IHttpPromiseCallbackArg<IResults>[]) => {
+        this.queryRunning = false
         let data: Partial<Plotly.ScatterData> = {
           x: [],
           y: [],
@@ -78,10 +83,10 @@ export class MainViewComponentController implements angular.IComponentController
         }
         this.sampleAttrs = responses[0].data.results.grouped.slice(0,5).map(g => g.attr)
         let cmap: {[id: string]: IStats} = {}
-        if (this.plotRelative)
+        if (!this.plotAbsolute)
           for (let group of responses[1].data.results.grouped) cmap[group.attr as string] = group.stats
         for (let group of responses[0].data.results.grouped) {
-          if (this.plotRelative) {
+          if (!this.plotAbsolute) {
             group.stats.docFreq = 1000000 * group.stats.docFreq / cmap[group.attr as string].docFreq
             group.stats.totalTermFreq = 1000000 * group.stats.totalTermFreq / cmap[group.attr as string].totalTermFreq
           }
@@ -91,15 +96,20 @@ export class MainViewComponentController implements angular.IComponentController
         responses[0].data.results.grouped.sort((a,b) => { if (a.attr < b.attr) return -1; if (a.attr > b.attr) return 1; return 0; })
         for (let group of responses[0].data.results.grouped) {
           data.x.push(group.attr)
-          data.y.push(this.plotDocFreq ? group.stats.docFreq : group.stats.totalTermFreq)
+          data.y.push(!this.plotTermFreq ? group.stats.docFreq : group.stats.totalTermFreq)
         }
         this.layout = {
-          title: this.plotDocFreq ? (this.plotRelative ? 'Document frequency per million documents' : 'Absolute document frequency') : (this.plotRelative ? 'Term frequency per million words' : 'Absolute term frequency')
+          title: !this.plotTermFreq ? (!this.plotAbsolute ? 'Document frequency per million documents' : 'Absolute document frequency') : (!this.plotAbsolute ? 'Term frequency per million words' : 'Absolute term frequency')
         }
         this.data = [ data ]
+      },
+      error => {
+        this.queryRunning = false
+        this.error = error
       }
     )
   }
+  /* @ngInject */
   constructor(private $q: angular.IQService, private $http: angular.IHttpService, private $httpParamSerializer: angular.IHttpParamSerializer, private $stateParams: angular.ui.IStateParamsService, private $state: angular.ui.IStateService) {
     Object.assign(this, $stateParams)
     this.endpointChanged()

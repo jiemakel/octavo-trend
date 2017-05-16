@@ -16,17 +16,11 @@ var commonConf = {
       {
         test: /\.ts$/,
         use: [ {
-          loader: 'angular-hot-loader',
-          options: {
-            log: false,
-            rootElement: 'html'
-          }
-        }, {
           loader: 'babel-loader',
           query: {
             cacheDirectory: false,
             presets: ['es2015', 'stage-0'],
-            plugins: ['angular-mark-classes','transform-runtime']
+            plugins: ['angular-mark-classes','angularjs-annotate','transform-runtime']
           }
         }, 'ts-loader' ],
         exclude: /node_modules/,

@@ -24,13 +24,15 @@ let m: angular.IModule = angular.module('app', [
 
 m.config(($stateProvider: angular.ui.IStateProvider, $urlRouterProvider: angular.ui.IUrlRouterProvider) => {
   $stateProvider.state('main', {
-    url: '/?endpoint&attr&{attrLength:int}&query&comparisonQuery',
+    url: '/?endpoint&attr&{attrLength:int}&query&comparisonQuery&{plotTermFreq:bool}&{plotAbsolute:bool}',
     params: {
       endpoint: { dynamic: true },
       attr: { dynamic: true},
       attrLength: { dynamic: true},
       query: { dynamic: true},
-      comparisonQuery: { dynamic: true}
+      comparisonQuery: { dynamic: true},
+      plotTermFreq: { dynamic: true},
+      plotAbsolute: { dynamic: true}
     },
     component: 'mainView'
   })
