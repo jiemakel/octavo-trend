@@ -1,0 +1,14 @@
+.container
+  
+  h1 Octavo UI
+
+  .form-group.has-feedback(ng-class="{ 'has-success' : $ctrl.isEndpointValid === true, 'has-error' : $ctrl.isEndpointValid === false}")
+    label Endpoint
+    input.form-control(type="text",ng-model="$ctrl.endpoint",ng-change="$ctrl.endpointChanged()")
+    span.glyphicon.glyphicon-ok.form-control-feedback(ng-show="$ctrl.isEndpointValid")
+    span.glyphicon.glyphicon-remove.form-control-feedback(ng-show="!$ctrl.isEndpointValid")
+  
+  ul
+    li: a(ui-sref="search($ctrl)") search
+    li: a(ui-sref="trend($ctrl)") trend graphs
+    li: a(ui-sref="word-cloud($ctrl)") collocation word clouds

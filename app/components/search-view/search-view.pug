@@ -1,0 +1,53 @@
+.container
+  .form-group.has-feedback(ng-class="{ 'has-success' : $ctrl.isEndpointValid === true, 'has-error' : $ctrl.isEndpointValid === false}")
+    label Endpoint
+    input.form-control(type="text",ng-model="$ctrl.endpoint",ng-change="$ctrl.endpointChanged()")
+    span.glyphicon.glyphicon-ok.form-control-feedback(ng-show="$ctrl.isEndpointValid")
+    span.glyphicon.glyphicon-remove.form-control-feedback(ng-show="!$ctrl.isEndpointValid")
+  .form-group
+    label Default query level
+    select.form-control(ng-model="$ctrl.defaultLevel",ng-options="level for level in $ctrl.availableLevels")
+  .form-group
+    label Query
+    textarea.form-control(ng-model="$ctrl.query")
+    p.help-block Understands an expanded form of <a href="http://lucene.apache.org/core/6_5_1/queryparser/org/apache/lucene/queryparser/classic/package-summary.html#package.description">Lucene query parser syntax</a>.
+  .form-group
+    label Fields to show
+    .row: .col-xs-12
+      label.checkbox-inline(ng-repeat="field in $ctrl.availableFields")
+        input(type="checkbox",ng-model="$ctrl.selectedFields[field]") 
+        | {{field}}
+  .form-group
+    label 
+      input(type="checkbox",ng-model="$ctrl.showMatches")
+      | &nbsp;Show matches
+  .form-group
+    label Limit
+      input.form-control(type="number",ng-model="$ctrl.limit")
+    p.help-block -1 for no limit
+      
+  .form-group
+    label Further options
+    input.form-control(type="text",ng-model="$ctrl.furtherOptions")
+      
+  button.btn.btn-success(ng-click="$ctrl.runQuery()",ng-disabled="$ctrl.queryRunning") Query
+
+  div(ng-show="$ctrl.error")
+    h2 Query resulted in error:
+    | {{$ctrl.error}}
+
+  div(ng-show="!$ctrl.queryRunning")
+    
+    h2 {{ ($ctrl.limit !== -1 && $ctrl.limit < $ctrl.totalResults) ? 'First '+$ctrl.limit+' of ' : ''}}{{$ctrl.totalResults}} Results
+    
+    table.table.table-bordered.table-responsive
+      thead: tr: th(ng-repeat="field in $ctrl.field",ng-click="$ctrl.sortReverse = $ctrl.sortField == field ? !$ctrl.sortReverse : $ctrl.sortReverse;$ctrl.sortField = field") {{::field}}
+        span.glyphicon.glyphicon-chevron-down(ng-show="$ctrl.sortField == field && !$ctrl.sortReverse")
+        span.glyphicon.glyphicon-chevron-up(ng-show="$ctrl.sortField == field && $ctrl.sortReverse")
+      tbody(ng-repeat="result in $ctrl.results | orderBy:$ctrl.sortField:$ctrl.sortReverse")
+        tr.info: td(ng-repeat="field in $ctrl.field") 
+          a(ng-if="result[field].indexOf('http') === 0",ng-href="{{result[field]}}",target="_blank") {{::result[field]}}
+          span(ng-if="result[field].indexOf('http') !== 0") {{::result[field]}}
+        tr(ng-repeat="match in result.matches")
+          td(colspan="{{::$ctrl.field.length}}",ng-bind-html="match")
+      

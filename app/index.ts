@@ -23,8 +23,15 @@ let m: angular.IModule = angular.module('app', [
   ])
 
 m.config(($stateProvider: angular.ui.IStateProvider, $urlRouterProvider: angular.ui.IUrlRouterProvider) => {
-  $stateProvider.state('main', {
-    url: '/?endpoint&attr&{attrLength:int}&query&comparisonQuery&{plotTermFreq:bool}&{plotAbsolute:bool}',
+  $stateProvider.state('index', {
+    url: '/?endpoint',
+    params: {
+      endpoint: { dynamic: true }
+    },
+    component: 'indexView'
+  })
+  $stateProvider.state('trend', {
+    url: '/trend?endpoint&attr&{attrLength:int}&query&comparisonQuery&{plotTermFreq:bool}&{plotAbsolute:bool}',
     params: {
       endpoint: { dynamic: true },
       attr: { dynamic: true},
@@ -34,7 +41,27 @@ m.config(($stateProvider: angular.ui.IStateProvider, $urlRouterProvider: angular
       plotTermFreq: { dynamic: true},
       plotAbsolute: { dynamic: true}
     },
-    component: 'mainView'
+    component: 'trendView'
+  })
+  $stateProvider.state('search', {
+    url: '/search?endpoint&query&field&showMatches&furtherOptions&{limit:int}&defaultLevel',
+    params: {
+      endpoint: { dynamic: true },
+      query: { dynamic: true },
+      field: { dynamic: true, array: true },
+      showMatches: { dynamic: true },
+      defaultLevel: { dynamic: true },
+      limit: { dynamic: true },
+      furtherOptions: { dynamic: true }
+    },
+    component: 'searchView'
+  })
+  $stateProvider.state('word-cloud', {
+    url: '/word-cloud?endpoint',
+    params: {
+      endpoint: { dynamic: true },
+    },
+    component: 'wordCloudView'
   })
   $urlRouterProvider.otherwise('/')
 })

@@ -41,8 +41,13 @@
   div(ng-show="$ctrl.error")
     h2 Query resulted in error:
     | {{$ctrl.error}}
-  
+    
   div(ng-show="!$ctrl.queryRunning")
+    
+    h2 Query URL
+    
+    textarea.form-control(disabled) {{$ctrl.queryURL}}
+    
     h2 Results
     
     h4 Sample attributes
