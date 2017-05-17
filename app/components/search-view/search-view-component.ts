@@ -29,6 +29,7 @@ class SearchViewComponentController extends OctavoComponentController {
   private totalResults: number
   private results: IResult[]
   private limit: number
+  private response: any
 
   protected endpointUpdated(indexInfo: IIndexMetadata): void {
     this.availableLevels = indexInfo.levels.map(level => level.id)
@@ -54,6 +55,7 @@ class SearchViewComponentController extends OctavoComponentController {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
     }).then(
       (response: angular.IHttpPromiseCallbackArg<IResults>) => {
+        this.response = JSON.parse(JSON.stringify(response.data))
         this.queryRunning = false
         this.totalResults = response.data.results.total
         this.results = response.data.results.docs

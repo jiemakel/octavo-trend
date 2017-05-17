@@ -5,6 +5,7 @@ import * as angular from 'angular'
 import 'angular-ui-router'
 import 'angular-animate'
 import 'angular-ui-bootstrap'
+import 'ng-prettyjson/dist/ng-prettyjson.min.js'
 
 import './styles/main.styl'
 // Register modules
@@ -19,7 +20,8 @@ let m: angular.IModule = angular.module('app', [
   'ui.router',
   'ui.bootstrap',
   'ui.bootstrap.tpls',
-  'ngAnimate'
+  'ngAnimate',
+  'ngPrettyJson'
   ])
 
 m.config(($stateProvider: angular.ui.IStateProvider, $urlRouterProvider: angular.ui.IUrlRouterProvider) => {
