@@ -44,7 +44,7 @@
       thead: tr: th(ng-repeat="field in $ctrl.field track by $index ",ng-click="$ctrl.sortReverse = $ctrl.sortField == field ? !$ctrl.sortReverse : $ctrl.sortReverse;$ctrl.sortField = field") {{::field}}
         span.glyphicon.glyphicon-chevron-down(ng-show="$ctrl.sortField == field && !$ctrl.sortReverse")
         span.glyphicon.glyphicon-chevron-up(ng-show="$ctrl.sortField == field && $ctrl.sortReverse")
-      tbody(ng-repeat="result in $ctrl.results | orderBy:$ctrl.sortField:$ctrl.sortReverse track by $index ")
+      tbody(ng-repeat="result in $ctrl.results | orderBy:$ctrl.sortField:$ctrl.sortReverse")
         tr.info: td(ng-repeat="field in $ctrl.field track by $index ") 
           a(ng-if="result[field].indexOf('http') === 0",ng-href="{{result[field]}}",target="_blank") {{::result[field]}}
           span(ng-if="result[field].indexOf('http') !== 0") {{::result[field]}}

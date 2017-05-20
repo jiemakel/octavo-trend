@@ -33,7 +33,7 @@ m.config(($stateProvider: angular.ui.IStateProvider, $urlRouterProvider: angular
     component: 'indexView'
   })
   $stateProvider.state('trend', {
-    url: '/trend?endpoint&attr&{attrLength:int}&query&comparisonQuery&{plotTermFreq:bool}&{plotAbsolute:bool}',
+    url: '/trend?endpoint&attr&{attrLength:int}&query&comparisonQuery&{plotTermFreq:bool}&{plotAbsolute:bool}&defaultLevel',
     params: {
       endpoint: { dynamic: true },
       attr: { dynamic: true},
@@ -41,7 +41,8 @@ m.config(($stateProvider: angular.ui.IStateProvider, $urlRouterProvider: angular
       query: { dynamic: true},
       comparisonQuery: { dynamic: true},
       plotTermFreq: { dynamic: true},
-      plotAbsolute: { dynamic: true}
+      plotAbsolute: { dynamic: true},
+      defaultLevel: { dynamic: true}
     },
     component: 'trendView'
   })

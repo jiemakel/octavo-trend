@@ -5,6 +5,9 @@
     span.glyphicon.glyphicon-ok.form-control-feedback(ng-show="$ctrl.isEndpointValid")
     span.glyphicon.glyphicon-remove.form-control-feedback(ng-show="!$ctrl.isEndpointValid")
   .form-group
+    label Default query level
+    select.form-control(ng-model="$ctrl.defaultLevel",ng-options="level for level in $ctrl.availableLevels")
+  .form-group
     label Query
     textarea.form-control(ng-model="$ctrl.query")
   .form-group

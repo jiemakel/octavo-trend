@@ -73,6 +73,7 @@ class SearchViewComponentController extends OctavoComponentController {
   constructor(private $sce: angular.ISCEService, private $q: angular.IQService, $http: angular.IHttpService, private $httpParamSerializer: angular.IHttpParamSerializer, $stateParams: angular.ui.IStateParamsService, $state: angular.ui.IStateService) {
     super($http, $stateParams, $state)
     if (!this.limit) this.limit = 20
+    if (!this.field) this.field = []
     for (let field of this.field) this.selectedFields[field] = true
     if (this.query) this.runQuery()
   }

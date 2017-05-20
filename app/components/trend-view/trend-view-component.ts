@@ -12,7 +12,6 @@ interface IResults {
   results: {
     general: IStats
     grouped: Array<{
-      attr: string | Date
       stats: IStats
     }>
   }
@@ -20,13 +19,15 @@ interface IResults {
 import {OctavoComponentController, IIndexMetadata} from '../octavo-component-controller'
 
 export class TrendViewComponentController extends OctavoComponentController {
+  public defaultLevel: string
   public attr: string
   public attrLength: number
   public query: string
   public comparisonQuery: string
-  public plotTermFreq: boolean = false
-  public plotAbsolute: boolean = false
+  public plotTermFreq: boolean
+  public plotAbsolute: boolean
 
+  private availableLevels: string[]
   private attrs: string[]
   private sampleAttrs: (string|Date)[]
   private queryURL: string
@@ -35,6 +36,8 @@ export class TrendViewComponentController extends OctavoComponentController {
 
   protected endpointUpdated(indexInfo: IIndexMetadata): void {
     this.attrs = indexInfo.sortedDocValuesFields.concat(indexInfo.storedSingularFields)
+    this.availableLevels = indexInfo.levels.map(level => level.id)
+    if (!this.defaultLevel) this.defaultLevel = this.availableLevels[this.availableLevels.length - 1]
   }
 
   protected runQuery(): void {
@@ -42,7 +45,7 @@ export class TrendViewComponentController extends OctavoComponentController {
     let params: string = this.$httpParamSerializer({
       attr: this.attr,
       attrLength: this.attrLength !== -1 ? this.attrLength : undefined,
-      query: this.query
+      query: this.defaultLevel && this.query.indexOf('<') !== 0 ? '<' + this.defaultLevel + '§' + this.query + '§' + this.defaultLevel + '>' : this.query,
     })
     this.queryURL = this.endpoint + 'termStats' + '?' + params
     let q1: angular.IHttpPromise<IResults> = this.$http.post(this.endpoint + 'termStats', params, {
@@ -52,7 +55,7 @@ export class TrendViewComponentController extends OctavoComponentController {
       this.endpoint + 'termStats', this.$httpParamSerializer({
         attr: this.attr,
         attrLength: this.attrLength !== -1 ? this.attrLength : undefined,
-        query: this.comparisonQuery
+        query: this.defaultLevel && this.comparisonQuery.indexOf('<') !== 0 ? '<' + this.defaultLevel + '§' + this.comparisonQuery + '§' + this.defaultLevel + '>' : this.comparisonQuery,
       }),
       { headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
     }) as angular.IHttpPromise<IResults> : this.$q.resolve(null)
@@ -64,21 +67,21 @@ export class TrendViewComponentController extends OctavoComponentController {
           y: [],
           mode: 'lines+markers'
         }
-        this.sampleAttrs = responses[0].data.results.grouped.slice(0, 5).map(g => g.attr)
+        this.sampleAttrs = responses[0].data.results.grouped.slice(0, 5).map(g => g[this.attr])
         let cmap: {[id: string]: IStats} = {}
         if (!this.plotAbsolute)
-          for (let group of responses[1].data.results.grouped) cmap[group.attr as string] = group.stats
+          for (let group of responses[1].data.results.grouped) cmap[group[this.attr] as string] = group.stats
         for (let group of responses[0].data.results.grouped) {
           if (!this.plotAbsolute) {
-            group.stats.docFreq = 1000000 * group.stats.docFreq / cmap[group.attr as string].docFreq
-            group.stats.totalTermFreq = 1000000 * group.stats.totalTermFreq / cmap[group.attr as string].totalTermFreq
+            group.stats.docFreq = 1000000 * group.stats.docFreq / cmap[group[this.attr] as string].docFreq
+            group.stats.totalTermFreq = 1000000 * group.stats.totalTermFreq / cmap[group[this.attr] as string].totalTermFreq
           }
-          let ts: number = Date.parse(group.attr as string)
-          if (!isNaN(ts)) group.attr = new Date(ts)
+          let ts: number = Date.parse(group[this.attr] as string)
+          if (!isNaN(ts)) group[this.attr] = new Date(ts)
         }
-        responses[0].data.results.grouped.sort((a, b) => { if (a.attr < b.attr) return -1; if (a.attr > b.attr) return 1; return 0; })
+        responses[0].data.results.grouped.sort((a, b) => { if (a[this.attr] < b[this.attr]) return -1; if (a[this.attr] > b[this.attr]) return 1; return 0; })
         for (let group of responses[0].data.results.grouped) {
-          data.x.push(group.attr)
+          data.x.push(group[this.attr])
           data.y.push(!this.plotTermFreq ? group.stats.docFreq : group.stats.totalTermFreq)
         }
         this.layout = {
@@ -95,6 +98,8 @@ export class TrendViewComponentController extends OctavoComponentController {
   /* @ngInject */
   constructor(private $q: angular.IQService, $http: angular.IHttpService, private $httpParamSerializer: angular.IHttpParamSerializer, $stateParams: angular.ui.IStateParamsService, $state: angular.ui.IStateService) {
     super($http, $stateParams, $state)
+    if (!this.plotAbsolute) this.plotAbsolute = false
+    if (!this.plotTermFreq) this.plotTermFreq = false
     if (this.attr && this.query) this.runQuery()
   }
 }
