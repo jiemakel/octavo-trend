@@ -19,7 +19,7 @@ var commonConf = {
           loader: 'babel-loader',
           query: {
             cacheDirectory: false,
-            presets: ['es2015', 'stage-0'],
+            presets: [['es2015', { "modules": false, "loose": true }], 'stage-0'],
             plugins: ['angular-mark-classes','angularjs-annotate','transform-runtime']
           }
         }, 'ts-loader' ],
