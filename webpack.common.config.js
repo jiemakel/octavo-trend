@@ -20,7 +20,7 @@ var commonConf = {
           query: {
             cacheDirectory: false,
             presets: [['es2015', { "modules": false, "loose": true }], 'stage-0'],
-            plugins: ['angular-mark-classes','angularjs-annotate','transform-runtime']
+            plugins: ['angularjs-annotate','transform-runtime']
           }
         }, 'ts-loader' ],
         exclude: /node_modules/,

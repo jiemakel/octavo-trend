@@ -137,9 +137,9 @@ angular-d3-word-cloud@^0.4.0:
     d3-cloud "~1.2.4"
     jquery "~3.1.1"
 
-"angular-hot-loader@git://github.com/jiemakel/angular-hot-loader#v0.9.4":
-  version "0.9.4"
-  resolved "git://github.com/jiemakel/angular-hot-loader#15d9f4935ddde60db0ef5502607b8c78f5dc3f09"
+angular-hot-loader@^v0.9.6:
+  version "0.9.6"
+  resolved "https://registry.yarnpkg.com/angular-hot-loader/-/angular-hot-loader-0.9.6.tgz#a534282316bde97f622cac667401458d25043e0d"
   dependencies:
     loader-utils "^1.0.3"
     source-map "^0.5.6"
