@@ -1,7 +1,7 @@
 'use strict'
 
 import * as angular from 'angular'
-import * as Plotly from 'plotly.js'
+import 'ng-prettyjson/dist/ng-prettyjson.min.js'
 
 import {OctavoComponentController, IIndexMetadata} from '../octavo-component-controller'
 

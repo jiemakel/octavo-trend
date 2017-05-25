@@ -2,11 +2,11 @@
 
 import * as angular from 'angular'
 
-import './index-view/index-view-component'
-import './trend-view/trend-view-component'
-import './word-cloud-view/word-cloud-view-component'
-import './search-view/search-view-component'
-import './plotly/plotly-component'
+import 'components/index-view/index-view-component'
+import 'components/trend-view/trend-view-component'
+import 'components/word-cloud-view/word-cloud-view-component'
+import 'components/search-view/search-view-component'
+import 'components/plotly/plotly-component'
 
 angular.module('app.components', [
   'app.components.index-view',

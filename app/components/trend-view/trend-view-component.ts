@@ -1,6 +1,7 @@
 'use strict'
 
 import * as angular from 'angular'
+import 'ng-prettyjson/dist/ng-prettyjson.min.js'
 import * as Plotly from 'plotly.js'
 
 interface IStats {
@@ -100,6 +101,7 @@ export class TrendViewComponentController extends OctavoComponentController {
     super($http, $stateParams, $state)
     if (!this.plotAbsolute) this.plotAbsolute = false
     if (!this.plotTermFreq) this.plotTermFreq = false
+    if (!this.comparisonQuery) this.comparisonQuery = ''
     if (this.attr && this.query) this.runQuery()
   }
 }

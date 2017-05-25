@@ -1,5 +1,5 @@
-var glob = require("glob");
-var webpack = require("webpack");
+var glob = require('glob');
+var webpack = require('webpack');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
@@ -19,7 +19,7 @@ var commonConf = {
           loader: 'babel-loader',
           query: {
             cacheDirectory: false,
-            presets: [['es2015', { "modules": false, "loose": true }], 'stage-0'],
+            presets: [['es2015', { 'modules': false, 'loose': true }], 'stage-0'],
             plugins: ['angularjs-annotate','transform-runtime']
           }
         }, 'ts-loader' ],
@@ -45,13 +45,14 @@ var commonConf = {
     ]
   },
   resolve: {
-    modules: ["node_modules"],
-    descriptionFiles: ["package.json"],
-    extensions: [".tsx", ".ts", ".js", ".styl", ".pug", ".css"]
+    modules: [__dirname+'/app', 'node_modules'],
+    descriptionFiles: ['package.json'],
+    extensions: ['.tsx', '.ts', '.js', '.styl', '.pug', '.css']
   },
   externals: {
     angular: 'angular',
-    'plotly.js': 'Plotly'
+    'plotly.js': 'Plotly',
+    d3: 'd3'
   },
   devServer: {
     hot: true,

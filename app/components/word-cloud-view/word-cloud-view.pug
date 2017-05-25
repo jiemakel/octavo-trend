@@ -1,1 +1,30 @@
 .container
+  .form-group.has-feedback(ng-class="{ 'has-success' : $ctrl.isEndpointValid === true, 'has-error' : $ctrl.isEndpointValid === false}")
+    label Endpoint
+    input.form-control(type="text",ng-model="$ctrl.endpoint",ng-change="$ctrl.endpointChanged()")
+    span.glyphicon.glyphicon-ok.form-control-feedback(ng-show="$ctrl.isEndpointValid")
+    span.glyphicon.glyphicon-remove.form-control-feedback(ng-show="!$ctrl.isEndpointValid")
+  .form-group
+    label Default query level
+    select.form-control(ng-model="$ctrl.defaultLevel",ng-options="level for level in $ctrl.availableLevels")
+  .form-group
+    label Query
+    textarea.form-control(ng-model="$ctrl.query")
+    p.help-block Understands an expanded form of <a href="http://lucene.apache.org/core/6_5_1/queryparser/org/apache/lucene/queryparser/classic/package-summary.html#package.description">Lucene query parser syntax</a>.
+  .form-group
+    label Limit
+      input.form-control(type="number",ng-model="$ctrl.limit")
+    p.help-block -1 for no limit
+      
+  .form-group
+    label Further options
+    input.form-control(type="text",ng-model="$ctrl.furtherOptions")
+      
+  button.btn.btn-success(ng-click="$ctrl.runQuery()",ng-disabled="$ctrl.queryRunning") Query
+
+  div(ng-show="$ctrl.error")
+    h2 Query resulted in error:
+    | {{$ctrl.error}}
+
+  div(ng-show="!$ctrl.queryRunning")
+    word-cloud(words="$ctrl.words" width="$ctrl.cloudWidth" height="$ctrl.cloudHeight",on-click="$ctrl.wordClicked")

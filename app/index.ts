@@ -5,13 +5,12 @@ import * as angular from 'angular'
 import 'angular-ui-router'
 import 'angular-animate'
 import 'angular-ui-bootstrap'
-import 'ng-prettyjson/dist/ng-prettyjson.min.js'
 
-import './styles/main.styl'
+import 'styles/main.styl'
 // Register modules
-import './services'
-import './components'
-import './filters'
+import 'services'
+import 'components'
+import 'filters'
 
 let m: angular.IModule = angular.module('app', [
   'app.services',
@@ -21,7 +20,8 @@ let m: angular.IModule = angular.module('app', [
   'ui.bootstrap',
   'ui.bootstrap.tpls',
   'ngAnimate',
-  'ngPrettyJson'
+  'ngPrettyJson',
+  'angular-d3-word-cloud'
   ])
 
 m.config(($stateProvider: angular.ui.IStateProvider, $urlRouterProvider: angular.ui.IUrlRouterProvider) => {
@@ -60,9 +60,13 @@ m.config(($stateProvider: angular.ui.IStateProvider, $urlRouterProvider: angular
     component: 'searchView'
   })
   $stateProvider.state('word-cloud', {
-    url: '/word-cloud?endpoint',
+    url: '/word-cloud?endpoint&query&defaultLevel&{limit:int}&furtherOptions',
     params: {
       endpoint: { dynamic: true },
+      query: { dynamic: true },
+      defaultLevel: { dynamic: true },
+      limit: { dynamic: true },
+      furtherOptions: { dynamic: true }
     },
     component: 'wordCloudView'
   })
