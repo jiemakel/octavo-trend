@@ -74,7 +74,7 @@ export class WordCloudViewComponentController extends OctavoComponentController 
         let spread: number = maxCount - minCount
         if (spread <= 0) spread = 1;
         let step: number = (maxWordSize - minWordSize) / spread
-        this.words = originWords.map(word => new Word(word.term, Math.round(maxWordSize - ((maxCount - word.weight) * step))))
+        this.words = originWords.map(word => new Word(word.term, Math.floor(maxWordSize - ((maxCount - word.weight) * step))))
       },
       error => {
         this.queryRunning = false
