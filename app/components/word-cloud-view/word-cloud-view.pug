@@ -13,13 +13,85 @@
     p.help-block Understands an expanded form of <a href="http://lucene.apache.org/core/6_5_1/queryparser/org/apache/lucene/queryparser/classic/package-summary.html#package.description">Lucene query parser syntax</a>.
   .form-group
     label Limit
-      input.form-control(type="number",ng-model="$ctrl.limit")
+    input.form-control(type="number",ng-model="$ctrl.limit")
     p.help-block -1 for no limit
-      
+  .form-group
+    label Maximum number of documents to process
+    input.form-control(type="number",ng-model="$ctrl.maxDocs")
+    p.help-block More hits than this triggers probabilistic sampling. -1 for no limit.
   .form-group
     label Further options
     input.form-control(type="text",ng-model="$ctrl.furtherOptions")
-      
+  h2(ng-click="$ctrl.showWeightingOptions=!$ctrl.showWeightingOptions") Term weighting
+    span.glyphicon.glyphicon-chevron-down(ng-show="!$ctrl.showWeightingOptions")
+    span.glyphicon.glyphicon-chevron-up(ng-show="$ctrl.showWeightingOptions")
+  div(ng-show="$ctrl.showWeightingOptions")
+    .form-group
+      label aggregate weighting formula
+      select.form-control(ng-model="$ctrl.sumScaling")
+        option(value="ABSOLUTE") absolute counts
+        option(value="TTF") term frequency weighted counts
+        option(value="DF") document frequency weighted counts
+    .form-group
+      label Laplace smoothing to use when weighting
+      input.form-control(type="number",ng-model="$ctrl.smoothing")
+    .form-group
+      label local weighting formula
+      select.form-control(ng-model="$ctrl.localScaling")
+        option(value="ABSOLUTE") absolute occurrence count
+        option(value="MIN") absolute count up to query frequency
+        option(value="FLAT") one occurrence counted per document
+  h2(ng-click="$ctrl.showFilteringOptions=!$ctrl.showFilteringOptions") Term filtering
+    span.glyphicon.glyphicon-chevron-down(ng-show="!$ctrl.showFilteringOptions")
+    span.glyphicon.glyphicon-chevron-up(ng-show="$ctrl.showFilteringOptions")
+  div(ng-show="$ctrl.showFilteringOptions")
+    .form-group
+      label Minimum total term frequency for term
+      input.form-control(type="number",ng-model="$ctrl.minTotalTermFreq")
+      p.help-block(ng-show="$ctrl.mquantiles") 
+        | 90% of terms have frequency {{$ctrl.mquantiles[0]}} or more.<br />50%: {{$ctrl.mquantiles[1]}} or more, <br />20%: {{$ctrl.mquantiles[2]}} or more, <br />10%: {{$ctrl.mquantiles[3]}} or more.
+    .form-group
+      label Maximum total term frequency for term
+      input.form-control(type="number",ng-model="$ctrl.maxTotalTermFreq")
+      p.help-block
+        span(ng-show="$ctrl.quantiles") 95% of terms have frequency {{$ctrl.quantiles[0]}} or less. <br />99%: {{$ctrl.quantiles[1]}} or less, <br />99.5%: {{$ctrl.quantiles[2]}} or less, <br />99.9%: {{$ctrl.quantiles[3]}} or less.<br />
+        span -1 for no limit.
+    .form-group
+      label Minimum total document frequency for term
+      input.form-control(type="number",ng-model="$ctrl.minDocFreq")
+      p.help-block(ng-show="$ctrl.mdquantiles") 
+        | 90% of terms have frequency {{$ctrl.mdquantiles[0]}} or more. <br />50%: {{$ctrl.mdquantiles[1]}} or more, <br />20%: {{$ctrl.mdquantiles[2]}} or more, <br />10%: {{$ctrl.mdquantiles[3]}} or more.
+    .form-group
+      label Maximum total document frequency for term
+      input.form-control(type="number",ng-model="$ctrl.maxDocFreq")
+      p.help-block
+       span(ng-show="$ctrl.dquantiles") 95% of terms have frequency {{$ctrl.dquantiles[0]}} or less. <br />99%: {{$ctrl.dquantiles[1]}} or less, <br />99.5%: {{$ctrl.dquantiles[2]}} or less, <br />99.9%: {{$ctrl.dquantiles[3]}} or less.<br />
+       span -1 for no limit.
+    .form-group
+      label Minimum occurrences for term with regard to query
+      input.form-control(type="number",ng-model="$ctrl.minSumFreq")
+    .form-group
+      label Maximum occurrences for term with regard to query
+      input.form-control(type="number",ng-model="$ctrl.maxSumFreq")
+      p.help-block -1 for no limit.
+    .form-group
+      label Minimum occurrences for term inside a single document for that document to be counted
+      input.form-control(type="number",ng-model="$ctrl.minFreqInDoc")
+    .form-group
+      label Maximum occurrences for term inside a single document for that document to be counted
+      input.form-control(type="number",ng-model="$ctrl.maxFreqInDoc")
+      p.help-block -1 for no limit.
+    .form-group
+      label Minimum term length
+      input.form-control(type="number",ng-model="$ctrl.minTermLength")
+    .form-group
+      label Maximum term length
+      input.form-control(type="number",ng-model="$ctrl.maxTermLength")
+      p.help-block -1 for no limit.
+    .form-group
+      label Term filter
+      input.form-control(type="text",ng-model="$ctrl.termFilter")
+      p.help-block Groovy expression returning a boolean. Term=term      
   button.btn.btn-success(ng-click="$ctrl.runQuery()",ng-disabled="$ctrl.queryRunning") Query
 
   div(ng-show="$ctrl.error")
@@ -28,3 +100,10 @@
 
   div(ng-show="!$ctrl.queryRunning")
     word-cloud(words="$ctrl.words" width="$ctrl.cloudWidth" height="$ctrl.cloudHeight",on-click="$ctrl.wordClicked")
+  
+    h2(ng-click="$ctrl.showRaw=!$ctrl.showRaw") Raw results
+      span.glyphicon.glyphicon-chevron-down(ng-show="!$ctrl.showRaw")
+      span.glyphicon.glyphicon-chevron-up(ng-show="$ctrl.showRaw")
+    div(ng-show="$ctrl.showRaw")
+      textarea.form-control(disabled) {{$ctrl.queryURL}}      
+      pre(pretty-json="$ctrl.response")

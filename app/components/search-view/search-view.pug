@@ -54,5 +54,7 @@
     h2(ng-click="$ctrl.showRaw=!$ctrl.showRaw") Raw results
       span.glyphicon.glyphicon-chevron-down(ng-show="!$ctrl.showRaw")
       span.glyphicon.glyphicon-chevron-up(ng-show="$ctrl.showRaw")
-    pre(pretty-json="$ctrl.response",ng-show="$ctrl.showRaw")
+    div(ng-show="$ctrl.showRaw")
+      textarea.form-control(disabled) {{$ctrl.queryURL}}      
+      pre(pretty-json="$ctrl.response")
       

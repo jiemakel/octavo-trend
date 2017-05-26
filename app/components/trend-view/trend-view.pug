@@ -47,10 +47,6 @@
     
   div(ng-show="!$ctrl.queryRunning")
     
-    h2 Query URL
-    
-    textarea.form-control(disabled) {{$ctrl.queryURL}}
-    
     h2 Results
     
     h4 Sample attributes
@@ -58,4 +54,11 @@
     
     h4 Graph
     plotly(data="$ctrl.data",layout="$ctrl.layout")
+
+    h2(ng-click="$ctrl.showRaw=!$ctrl.showRaw") Raw results
+      span.glyphicon.glyphicon-chevron-down(ng-show="!$ctrl.showRaw")
+      span.glyphicon.glyphicon-chevron-up(ng-show="$ctrl.showRaw")
+    div(ng-show="$ctrl.showRaw")
+      textarea.form-control(disabled) {{$ctrl.queryURL}}      
+      pre(pretty-json="$ctrl.response")
   

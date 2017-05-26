@@ -32,6 +32,7 @@ export class TrendViewComponentController extends OctavoComponentController {
   private attrs: string[]
   private sampleAttrs: (string|Date)[]
   private queryURL: string
+  private response: any
   private data: Partial<Plotly.Data>[]
   private layout: any // Partial<Plotly.Layout>
 
@@ -48,8 +49,8 @@ export class TrendViewComponentController extends OctavoComponentController {
       attrLength: this.attrLength !== -1 ? this.attrLength : undefined,
       query: this.defaultLevel && this.query.indexOf('<') !== 0 ? '<' + this.defaultLevel + '§' + this.query + '§' + this.defaultLevel + '>' : this.query,
     })
-    this.queryURL = this.endpoint + 'termStats' + '?' + params
-    let q1: angular.IHttpPromise<IResults> = this.$http.post(this.endpoint + 'termStats', params, {
+    this.queryURL = this.endpoint + 'queryStats' + '?' + params
+    let q1: angular.IHttpPromise<IResults> = this.$http.post(this.endpoint + 'queryStats', params, {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
     }) as angular.IHttpPromise<IResults>
     let q2: angular.IHttpPromise<IResults> = !this.plotAbsolute ? this.$http.post(
@@ -62,6 +63,7 @@ export class TrendViewComponentController extends OctavoComponentController {
     }) as angular.IHttpPromise<IResults> : this.$q.resolve(null)
     this.$q.all([q1, q2]).then(
       (responses: angular.IHttpPromiseCallbackArg<IResults>[]) => {
+        this.response = JSON.parse(JSON.stringify([responses[0].data, responses[1].data]))
         this.queryRunning = false
         let data: Partial<Plotly.ScatterData> = {
           x: [],

@@ -60,12 +60,27 @@ m.config(($stateProvider: angular.ui.IStateProvider, $urlRouterProvider: angular
     component: 'searchView'
   })
   $stateProvider.state('word-cloud', {
-    url: '/word-cloud?endpoint&query&defaultLevel&{limit:int}&furtherOptions',
+    url: '/word-cloud?endpoint&query&defaultLevel&{limit:int}&{smoothing:int}&{maxDocs:int}&{minTotalTermFreq:int}&{maxTotalTermFreq:int}&{minDocFreq:int}&{maxDocFreq:int}&{minFreqInDoc:int}&{maxFreqInDoc:int}&{minTermLength:int}&{maxTermLength:int}&{minSumFreq:int}&{maxSumFreq:int}&termFilter&localScaling&sumScaling&furtherOptions',
     params: {
       endpoint: { dynamic: true },
       query: { dynamic: true },
       defaultLevel: { dynamic: true },
       limit: { dynamic: true },
+      smoothing: { dynamic: true },
+      maxDocs: { dynamic: true },
+      minTotalTermFreq: { dynamic: true},
+      maxTotalTermFreq: { dynamic: true},
+      minDocFreq: { dynamic: true},
+      maxDocFreq: { dynamic: true},
+      minFreqInDoc: { dynamic: true},
+      maxFreqInDoc: { dynamic: true},
+      minTermLength: { dynamic: true},
+      maxTermLength: { dynamic: true},
+      minSumFreq: { dynamic: true},
+      maxSumFreq: { dynamic: true},
+      termFilter: { dynamic: true},
+      localScaling: { dynamic: true},
+      sumScaling: { dynamic: true},
       furtherOptions: { dynamic: true }
     },
     component: 'wordCloudView'

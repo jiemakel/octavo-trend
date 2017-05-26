@@ -29,6 +29,7 @@ class SearchViewComponentController extends OctavoComponentController {
   private totalResults: number
   private results: IResult[]
   private limit: number
+  private queryURL: string
   private response: any
 
   protected endpointUpdated(indexInfo: IIndexMetadata): void {
@@ -51,6 +52,7 @@ class SearchViewComponentController extends OctavoComponentController {
       field: this.field,
       limit: this.limit
     }) + '&' + this.furtherOptions
+    this.queryURL = this.endpoint + 'search' + '?' + params
     this.$http.post(this.endpoint + 'search', params, {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
     }).then(
