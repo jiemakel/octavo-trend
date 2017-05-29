@@ -54,7 +54,7 @@ export class TrendViewComponentController extends OctavoComponentController {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
     }) as angular.IHttpPromise<IResults>
     let q2: angular.IHttpPromise<IResults> = !this.plotAbsolute ? this.$http.post(
-      this.endpoint + 'termStats', this.$httpParamSerializer({
+      this.endpoint + 'queryStats', this.$httpParamSerializer({
         attr: this.attr,
         attrLength: this.attrLength !== -1 ? this.attrLength : undefined,
         query: this.defaultLevel && this.comparisonQuery.indexOf('<') !== 0 ? '<' + this.defaultLevel + '§' + this.comparisonQuery + '§' + this.defaultLevel + '>' : this.comparisonQuery,
