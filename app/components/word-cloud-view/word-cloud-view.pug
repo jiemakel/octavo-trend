@@ -99,7 +99,7 @@
     | {{$ctrl.error}}
 
   div(ng-show="!$ctrl.queryRunning")
-    word-cloud(words="$ctrl.words" width="$ctrl.cloudWidth" height="$ctrl.cloudHeight",on-click="$ctrl.wordClicked")
+    word-cloud(words="$ctrl.words" width="$ctrl.cloudWidth" height="$ctrl.cloudHeight",on-click="$ctrl.wordClicked", rotate="360")
   
     h2(ng-click="$ctrl.showRaw=!$ctrl.showRaw") Raw results
       span.glyphicon.glyphicon-chevron-down(ng-show="!$ctrl.showRaw")
