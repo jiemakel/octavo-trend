@@ -75,8 +75,12 @@ export class WordCloudViewComponentController extends OctavoComponentController 
   private dquantiles: number[]
 
   public wordClicked: (Word) => void = (word: Word) => {
-    this.query = word.text
-    this.runQuery()
+    let url: string = this.$state.href('search', {
+      endpoint: this.endpoint,
+      query: '+(' + this.query + ') +' + word.text,
+      defaultLevel: this.defaultLevel
+    })
+    this.$window.open(url, '_blank');
   }
 
   protected endpointUpdated(indexInfo: IIndexMetadata): void {
@@ -143,7 +147,7 @@ export class WordCloudViewComponentController extends OctavoComponentController 
   }
 
   /* @ngInject */
-  constructor($element: angular.IAugmentedJQuery, $window: angular.IWindowService, private $sce: angular.ISCEService, private $q: angular.IQService, $http: angular.IHttpService, private $httpParamSerializer: angular.IHttpParamSerializer, $stateParams: angular.ui.IStateParamsService, $state: angular.ui.IStateService) {
+  constructor($element: angular.IAugmentedJQuery, private $window: angular.IWindowService, private $sce: angular.ISCEService, private $q: angular.IQService, $http: angular.IHttpService, private $httpParamSerializer: angular.IHttpParamSerializer, $stateParams: angular.ui.IStateParamsService, $state: angular.ui.IStateService) {
     super($http, $stateParams, $state)
     let element: HTMLElement = $element.find('word-cloud')[0]
     this.cloudHeight = $window.innerHeight * 0.75
