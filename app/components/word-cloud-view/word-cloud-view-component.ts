@@ -1,6 +1,8 @@
 'use strict'
 
 import * as angular from 'angular'
+import * as Plotly from 'plotly.js'
+
 import 'script-loader!d3-cloud/build/d3.layout.cloud.js'
 import 'angular-d3-word-cloud/dist/angular-word-cloud.js'
 import 'ng-prettyjson/dist/ng-prettyjson.min.js'
@@ -74,6 +76,11 @@ export class WordCloudViewComponentController extends OctavoComponentController 
   private mdquantiles: number[]
   private dquantiles: number[]
 
+  private tfData: Partial<Plotly.Data>[]
+  private tfLayout: any // Partial<Plotly.Layout>
+  private dfData: Partial<Plotly.Data>[]
+  private dfLayout: any // Partial<Plotly.Layout>
+
   public wordClicked: (Word) => void = (word: Word) => {
     let url: string = this.$state.href('search', {
       endpoint: this.endpoint,
@@ -95,9 +102,43 @@ export class WordCloudViewComponentController extends OctavoComponentController 
         let tfs: IQuantile[] = response.data.termFreqQuantiles
         let dfs: IQuantile[] = response.data.docFreqQuantiles
         this.mquantiles = [ tfs[100].freq, tfs[500].freq, tfs[800].freq, tfs[900].freq ]
-        this.quantiles = [ tfs[950].freq, tfs[990].freq, tfs[995].freq, tfs[999].freq ]
+        this.quantiles = [ tfs[950].freq, tfs[990].freq, tfs[995].freq, tfs[999].freq, tfs[1000].freq ]
         this.mdquantiles = [ dfs[100].freq, dfs[500].freq, dfs[800].freq, dfs[900].freq ]
-        this.dquantiles = [ dfs[950].freq, dfs[990].freq, dfs[995].freq, dfs[999].freq ]
+        this.dquantiles = [ dfs[950].freq, dfs[990].freq, dfs[995].freq, dfs[999].freq, dfs[1000].freq ]
+        let tfData: Partial<Plotly.ScatterData> = {
+          x: [],
+          y: [],
+          mode: 'markers'
+        }
+        for (let q of tfs) {
+          tfData.x.push((1.0 - parseFloat(q.quantile)) * 100)
+          tfData.y.push(q.freq)
+        }
+        this.tfData = [ tfData ]
+        this.tfLayout = {
+          title: 'Term frequency quantiles (log)',
+          yaxis: {
+            type: 'log',
+            autorange: true
+          }
+        }
+        let dfData: Partial<Plotly.ScatterData> = {
+          x: [],
+          y: [],
+          mode: 'markers'
+        }
+        for (let q of dfs.reverse()) {
+          dfData.x.push((1.0 - parseFloat(q.quantile)) * 100)
+          dfData.y.push(q.freq)
+        }
+        this.dfData = [ dfData ]
+        this.dfLayout = {
+          title: 'Document frequency quantiles (log)',
+          yaxis: {
+            type: 'log',
+            autorange: true
+          }
+        }
       }
     )
   }
