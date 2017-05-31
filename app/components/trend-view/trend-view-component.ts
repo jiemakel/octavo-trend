@@ -63,7 +63,7 @@ export class TrendViewComponentController extends OctavoComponentController {
     }) as angular.IHttpPromise<IResults> : this.$q.resolve(null)
     this.$q.all([q1, q2]).then(
       (responses: angular.IHttpPromiseCallbackArg<IResults>[]) => {
-        this.response = JSON.parse(JSON.stringify([responses[0].data, responses[1].data]))
+        this.response = JSON.parse(JSON.stringify(!this.plotAbsolute ? [responses[0].data, responses[1].data] : responses[0].data))
         this.queryRunning = false
         let data: Partial<Plotly.ScatterData> = {
           x: [],
