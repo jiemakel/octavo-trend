@@ -20,6 +20,12 @@
     input.form-control(type="number",ng-model="$ctrl.maxDocs")
     p.help-block More hits than this triggers probabilistic sampling. -1 for no limit.
   .form-group
+    .checkbox
+      label 
+        input(type="checkbox",ng-model="$ctrl.mds")
+        | Plot terms in MDS space
+    
+  .form-group
     label Further options
     input.form-control(type="text",ng-model="$ctrl.furtherOptions")
   h2(ng-click="$ctrl.showWeightingOptions=!$ctrl.showWeightingOptions") Term weighting
@@ -95,13 +101,19 @@
       input.form-control(type="text",ng-model="$ctrl.termFilter")
       p.help-block Groovy expression returning a boolean. Term=term      
   button.btn.btn-success(ng-click="$ctrl.runQuery()",ng-disabled="$ctrl.queryRunning") Query
+    span(ng-show="$ctrl.queryRunning") &nbsp;
+      span.glyphicon.glyphicon-hourglass
 
   div(ng-show="$ctrl.error")
     h2 Query resulted in error:
     | {{$ctrl.error}}
 
   div(ng-show="!$ctrl.queryRunning")
-    word-cloud(words="$ctrl.words" width="$ctrl.cloudWidth" height="$ctrl.cloudHeight",on-click="$ctrl.wordClicked", rotate="360")
+    | {{$ctrl.totalResults}}
+    
+    plotly(ng-show="$ctrl.mds",data="$ctrl.mdsData",layout="$ctrl.mdsLayout")
+    
+    word-cloud(ng-show="!$ctrl.mds",words="$ctrl.words" width="$ctrl.cloudWidth" height="$ctrl.cloudHeight",on-click="$ctrl.wordClicked", rotate="360")
   
     h2(ng-click="$ctrl.showRaw=!$ctrl.showRaw") Raw results
       span.glyphicon.glyphicon-chevron-down(ng-show="!$ctrl.showRaw")

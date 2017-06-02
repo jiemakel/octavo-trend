@@ -40,10 +40,11 @@ export class TrendViewComponentController extends OctavoComponentController {
     this.attrs = indexInfo.sortedDocValuesFields.concat(indexInfo.storedSingularFields)
     this.availableLevels = indexInfo.levels.map(level => level.id)
     if (!this.defaultLevel) this.defaultLevel = this.availableLevels[this.availableLevels.length - 1]
+    if (this.attr && this.query) this.doRunQuery()
   }
 
-  protected runQuery(): void {
-    super.runQuery()
+  protected doRunQuery(): void {
+    super.doRunQuery()
     let params: string = this.$httpParamSerializer({
       attr: this.attr,
       attrLength: this.attrLength !== -1 ? this.attrLength : undefined,
@@ -104,7 +105,6 @@ export class TrendViewComponentController extends OctavoComponentController {
     if (!this.plotAbsolute) this.plotAbsolute = false
     if (!this.plotTermFreq) this.plotTermFreq = false
     if (!this.comparisonQuery) this.comparisonQuery = ''
-    if (this.attr && this.query) this.runQuery()
   }
 }
 

@@ -12,6 +12,9 @@ import {OctavoComponentController, IIndexMetadata} from '../octavo-component-con
 interface IResult {
   term: string
   weight: number
+  termVector?: {
+    terms: number[]
+  }
 }
 
 class Word {
@@ -62,6 +65,7 @@ export class WordCloudViewComponentController extends OctavoComponentController 
   private localScaling: 'ABSOLUTE' | 'MIN' | 'FLAT'
   private sumScaling: 'ABSOLUTE' | 'TTF' | 'DF'
   private furtherOptions: string
+  private mds: boolean
 
   private words: Word[]
   private totalResults: number
@@ -80,6 +84,9 @@ export class WordCloudViewComponentController extends OctavoComponentController 
   private tfLayout: any // Partial<Plotly.Layout>
   private dfData: Partial<Plotly.Data>[]
   private dfLayout: any // Partial<Plotly.Layout>
+
+  private mdsData: Partial<Plotly.Data>[]
+  private mdsLayout: any // Partial<Plotly.Layout>
 
   public wordClicked: (Word) => void = (word: Word) => {
     let url: string = this.$state.href('search', {
@@ -141,10 +148,11 @@ export class WordCloudViewComponentController extends OctavoComponentController 
         }
       }
     )
+    if (this.query) this.doRunQuery()
   }
 
-  protected runQuery(): void {
-    super.runQuery()
+  protected doRunQuery(): void {
+    super.doRunQuery()
     let params: string = this.$httpParamSerializer({
       query: this.defaultLevel && this.query.indexOf('<') !== 0 ? '<' + this.defaultLevel + '§' + this.query + '§' + this.defaultLevel + '>' : this.query,
       limit: this.limit,
@@ -160,7 +168,21 @@ export class WordCloudViewComponentController extends OctavoComponentController 
       localScaling: this.localScaling,
       sumScaling: this.sumScaling,
       minTermLength: this.minTermLength,
-      maxTermLength: this.maxTermLength !== -1 ? this.maxTermLength : null
+      maxTermLength: this.maxTermLength !== -1 ? this.maxTermLength : null,
+      r_smoothing: this.mds ? this.smoothing : null,
+      r_maxDocs: this.mds ? this.maxDocs : null,
+      r_minTotalTermFreq: this.mds ? this.minTotalTermFreq : null,
+      r_maxTotalTermFreq: this.mds && this.maxTotalTermFreq !== -1 ? this.maxTotalTermFreq : null,
+      r_minDocFreq: this.mds ? this.minDocFreq : null,
+      r_maxDocFreq: this.mds && this.maxDocFreq !== -1 ? this.maxDocFreq : null,
+      r_minSumFreq: this.mds ? this.minSumFreq : null,
+      r_maxSumFreq: this.mds && this.maxSumFreq !== -1 ? this.maxSumFreq : null,
+      r_termFilter: this.mds && this.termFilter ? this.termFilter : null,
+      r_localScaling: this.mds ? this.localScaling : null,
+      r_sumScaling: this.mds ? this.sumScaling : null,
+      r_minTermLength: this.mds ? this.minTermLength : null,
+      r_maxTermLength: this.mds && this.maxTermLength !== -1 ? this.maxTermLength : null,
+      mdsDimensions: this.mds ? 2 : null
     }) + '&' + this.furtherOptions
     this.queryURL = this.endpoint + 'collocations' + '?' + params
     this.$http.post(this.endpoint + 'collocations', params, {
@@ -178,7 +200,32 @@ export class WordCloudViewComponentController extends OctavoComponentController 
         let spread: number = maxCount - minCount
         if (spread <= 0) spread = 1;
         let step: number = (maxWordSize - minWordSize) / spread
-        this.words = originWords.map(word => new Word(word.term, Math.floor(maxWordSize - ((maxCount - word.weight) * step))))
+        if (!this.mds)
+          this.words = originWords.map(word => new Word(word.term, Math.floor(maxWordSize - ((maxCount - word.weight) * step))))
+        else {
+          let mdsData: any = {
+            x: [],
+            y: [],
+            text: [],
+            type: 'scatter',
+            mode: 'text+markers',
+            marker: { size: [] }
+          }
+          for (let term of response.data.results.terms) {
+            (mdsData.text as string[]).push(term.term)
+            mdsData.x.push(term.termVector.terms[0])
+            mdsData.y.push(term.termVector.terms[1])
+            mdsData.marker.size.push(Math.floor(maxWordSize - ((maxCount - term.weight) * step)))
+          }
+          this.mdsData = [ mdsData ]
+          this.mdsLayout = {
+            title: 'Term space (MDS)',
+            hovermode: 'closest',
+            autosize: false,
+            width: 800,
+            height: 800
+          }
+        }
       },
       error => {
         this.queryRunning = false
@@ -210,8 +257,8 @@ export class WordCloudViewComponentController extends OctavoComponentController 
     if (!this.termFilter) this.termFilter = ''
     if (!this.localScaling) this.localScaling = 'ABSOLUTE'
     if (!this.sumScaling) this.sumScaling = 'TTF'
-    if (this.query) this.runQuery()
   }
+
 }
 
 export class WordCloudViewComponent implements angular.IComponentOptions {

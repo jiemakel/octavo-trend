@@ -36,6 +36,7 @@ class SearchViewComponentController extends OctavoComponentController {
     this.availableLevels = indexInfo.levels.map(level => level.id)
     if (!this.defaultLevel) this.defaultLevel = this.availableLevels[this.availableLevels.length - 1]
     this.availableFields = indexInfo.sortedDocValuesFields.concat(indexInfo.storedSingularFields).concat(indexInfo.numericDocValuesFields)
+    if (this.query) this.doRunQuery()
   }
 
   protected updateSelectedFields(): void {
@@ -43,9 +44,9 @@ class SearchViewComponentController extends OctavoComponentController {
       this.field = this.availableFields.filter(f => this.selectedFields[f])
   }
 
-  protected runQuery(): void {
+  protected doRunQuery(): void {
     this.updateSelectedFields()
-    super.runQuery()
+    super.doRunQuery()
     let params: string = this.$httpParamSerializer({
       query: this.defaultLevel && this.query.indexOf('<') !== 0 ? '<' + this.defaultLevel + '§' + this.query + '§' + this.defaultLevel + '>' : this.query,
       returnMatches: this.showMatches,
@@ -77,7 +78,6 @@ class SearchViewComponentController extends OctavoComponentController {
     if (!this.limit) this.limit = 20
     if (!this.field) this.field = []
     for (let field of this.field) this.selectedFields[field] = true
-    if (this.query) this.runQuery()
   }
 
 

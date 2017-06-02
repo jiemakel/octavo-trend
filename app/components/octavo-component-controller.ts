@@ -24,7 +24,7 @@ export class OctavoComponentController implements angular.IComponentController {
     if (params.endpoint && this.endpoint !== params.endpoint) {
       this.endpoint = params.endpoint
       this.endpointChanged()
-    }
+    } else this.doRunQuery()
   }
 
   // tslint:disable-next-line: no-empty
@@ -42,8 +42,12 @@ export class OctavoComponentController implements angular.IComponentController {
       }
     )
   }
+
   protected runQuery(): void {
     this.$state.go(this.$state.current, this)
+  }
+
+  protected doRunQuery(): void {
     this.error = undefined
     this.queryRunning = true
   }
