@@ -2,12 +2,15 @@
 
 import * as angular from 'angular'
 import * as Plotly from 'plotly.js'
+import * as d3 from 'd3'
+
+import {IPlotlyEvent} from 'components/plotly/plotly-component'
 
 import 'script-loader!d3-cloud/build/d3.layout.cloud.js'
 import 'angular-d3-word-cloud/dist/angular-word-cloud.js'
 import 'ng-prettyjson/dist/ng-prettyjson.min.js'
 
-import {OctavoComponentController, IIndexMetadata} from '../octavo-component-controller'
+import {OctavoComponentController, IIndexMetadata} from 'components/octavo-component-controller'
 
 interface IResult {
   term: string
@@ -88,13 +91,33 @@ export class WordCloudViewComponentController extends OctavoComponentController 
   private mdsData: Partial<Plotly.Data>[]
   private mdsLayout: any // Partial<Plotly.Layout>
 
+  public mdsWordClicked(data: IPlotlyEvent): void {
+    console.log(data)
+    if (data.event.altKey) {
+      this.query = data.points[0].data.text[data.points[0].pointNumber]
+      this.doRunQuery()
+    } else {
+      let url: string = this.$state.href('search', {
+        endpoint: this.endpoint,
+        query: '+(' + this.query + ') +' + data.points[0].data.text[data.points[0].pointNumber],
+        defaultLevel: this.defaultLevel
+      })
+      this.$window.open(url, '_blank');
+    }
+  }
+
   public wordClicked: (Word) => void = (word: Word) => {
-    let url: string = this.$state.href('search', {
-      endpoint: this.endpoint,
-      query: '+(' + this.query + ') +' + word.text,
-      defaultLevel: this.defaultLevel
-    })
-    this.$window.open(url, '_blank');
+    if (d3.event.altKey) {
+      this.query = word.text
+      this.doRunQuery()
+    } else {
+      let url: string = this.$state.href('search', {
+        endpoint: this.endpoint,
+        query: '+(' + this.query + ') +' + word.text,
+        defaultLevel: this.defaultLevel
+      })
+      this.$window.open(url, '_blank');
+    }
   }
 
   protected endpointUpdated(indexInfo: IIndexMetadata): void {

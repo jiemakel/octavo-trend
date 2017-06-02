@@ -111,7 +111,7 @@
   div(ng-show="!$ctrl.queryRunning")
     | {{$ctrl.totalResults}}
     
-    plotly(ng-show="$ctrl.mds",data="$ctrl.mdsData",layout="$ctrl.mdsLayout")
+    plotly(ng-show="$ctrl.mds",data="$ctrl.mdsData",layout="$ctrl.mdsLayout",on-click="$ctrl.mdsWordClicked(data)")
     
     word-cloud(ng-show="!$ctrl.mds",words="$ctrl.words" width="$ctrl.cloudWidth" height="$ctrl.cloudHeight",on-click="$ctrl.wordClicked", rotate="360")
   
