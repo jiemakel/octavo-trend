@@ -92,7 +92,6 @@ export class WordCloudViewComponentController extends OctavoComponentController 
   private mdsLayout: any // Partial<Plotly.Layout>
 
   public mdsWordClicked(data: IPlotlyEvent): void {
-    console.log(data)
     if (data.event.altKey) {
       this.query = data.points[0].data.text[data.points[0].pointNumber]
       this.doRunQuery()
