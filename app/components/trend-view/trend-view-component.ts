@@ -104,6 +104,7 @@ export class TrendViewComponentController extends OctavoComponentController {
     super($http, $stateParams, $state)
     if (!this.plotAbsolute) this.plotAbsolute = false
     if (!this.plotTermFreq) this.plotTermFreq = false
+    if (!this.query) this.query = ''
     if (!this.comparisonQuery) this.comparisonQuery = ''
   }
 }
