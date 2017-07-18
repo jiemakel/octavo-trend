@@ -204,7 +204,7 @@ export class WordCloudViewComponentController extends OctavoComponentController 
       r_sumScaling: this.mds ? this.sumScaling : null,
       r_minTermLength: this.mds ? this.minTermLength : null,
       r_maxTermLength: this.mds && this.maxTermLength !== -1 ? this.maxTermLength : null,
-      mdsDimensions: this.mds ? 2 : null
+      dimensions: this.mds ? 2 : null
     }) + '&' + this.furtherOptions
     this.queryURL = this.endpoint + 'collocations' + '?' + params
     this.$http.post(this.endpoint + 'collocations', params, {
