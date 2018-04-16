@@ -3,7 +3,7 @@ html(lang="en",ng-app="app",ng-hint)
   head
     meta(charset="utf-8")
     meta(name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width")
-    script(src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js")
+    script(src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.7/angular.js")
     script(src="https://cdn.plot.ly/plotly-latest.min.js")
     script(src="https://d3js.org/d3.v4.min.js")
     link(rel="stylesheet" href="styles.css")
@@ -11,3 +11,20 @@ html(lang="en",ng-app="app",ng-hint)
   body
     div(ui-view)
     script(src="ui-bundle.js")
+    .modal(ng-class="authInfo.authOpen ? 'modal-open fade in' : ''",ng-style="authInfo.authOpen ? {display:'block'} : {}"): .modal-dialog(ng-show="authInfo.authOpen"): form.modal-content
+      .modal-header: h4.modal-title Authentication required
+      .modal-body
+        .form-group
+          label URL
+          input.form-control(type='text', ng-model="authInfo.url")
+        .form-group
+          label Username:
+          input.form-control(type='text', ng-model="authInfo.username")
+        .form-group
+          label Password:
+          input.form-control(type='password', ng-model="authInfo.password")
+      .modal-footer
+          button.btn.btn-success(ng-click="setAuth()") Ok
+          button.btn.btn-danger(ng-click="dismissAuth()") Cancel
+    .uib-modal-backdrop.fade.in(ng-show="authInfo.authOpen")
+

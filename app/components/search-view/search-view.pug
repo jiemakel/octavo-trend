@@ -1,7 +1,7 @@
 .container
   .form-group.has-feedback(ng-class="{ 'has-success' : $ctrl.isEndpointValid === true, 'has-error' : $ctrl.isEndpointValid === false}")
     label Endpoint
-    input.form-control(type="text",ng-model="$ctrl.endpoint",ng-change="$ctrl.endpointChanged()")
+    input.form-control(ng-change="$ctrl.endpointChanged()",ng-model="$ctrl.endpoint",type="text")
     span.glyphicon.glyphicon-ok.form-control-feedback(ng-show="$ctrl.isEndpointValid")
     span.glyphicon.glyphicon-remove.form-control-feedback(ng-show="!$ctrl.isEndpointValid")
   .form-group
@@ -14,21 +14,21 @@
   .form-group
     label Fields to show
     .row: .col-xs-12
-      label.checkbox-inline(ng-repeat="field in $ctrl.availableFields")
-        input(type="checkbox",ng-model="$ctrl.selectedFields[field]") 
-        | {{field}}
+      label.checkbox-inline(ng-repeat="field in $ctrl.availableFields",title="{{field.description}}")
+        input(ng-model="$ctrl.selectedFields[field.id]",type="checkbox") 
+        | {{field.id}}
   .form-group
     label 
-      input(type="checkbox",ng-model="$ctrl.showMatches")
+      input(ng-model="$ctrl.showMatches",type="checkbox")
       | &nbsp;Show matches
   .form-group
     label Limit
-      input.form-control(type="number",ng-model="$ctrl.limit")
+      input.form-control(ng-model="$ctrl.limit",type="number")
     p.help-block -1 for no limit
       
   .form-group
     label Further options
-    input.form-control(type="text",ng-model="$ctrl.furtherOptions")
+    input.form-control(ng-model="$ctrl.furtherOptions",type="text")
       
   button.btn.btn-success(ng-click="$ctrl.runQuery()",ng-disabled="$ctrl.queryRunning") Query
 
@@ -41,15 +41,15 @@
     h2 {{ ($ctrl.limit !== -1 && $ctrl.limit < $ctrl.totalResults) ? 'First '+$ctrl.limit+' of ' : ''}}{{$ctrl.totalResults}} Results
     
     table.table.table-bordered.table-responsive
-      thead: tr: th(ng-repeat="field in $ctrl.field track by $index ",ng-click="$ctrl.sortReverse = $ctrl.sortField == field ? !$ctrl.sortReverse : $ctrl.sortReverse;$ctrl.sortField = field") {{::field}}
+      thead: tr: th(ng-click="$ctrl.sortReverse = $ctrl.sortField == field ? !$ctrl.sortReverse : $ctrl.sortReverse;$ctrl.sortField = field",ng-repeat="field in $ctrl.field track by $index ") {{::field}}
         span.glyphicon.glyphicon-chevron-down(ng-show="$ctrl.sortField == field && !$ctrl.sortReverse")
         span.glyphicon.glyphicon-chevron-up(ng-show="$ctrl.sortField == field && $ctrl.sortReverse")
       tbody(ng-repeat="result in $ctrl.results | orderBy:$ctrl.sortField:$ctrl.sortReverse")
         tr.info: td(ng-repeat="field in $ctrl.field track by $index ") 
-          a(ng-if="result[field].indexOf('http') === 0",ng-href="{{result[field]}}",target="_blank") {{::result[field]}}
+          a(ng-href="{{result[field]}}",ng-if="result[field].indexOf('http') === 0",target="_blank") {{::result[field]}}
           span(ng-if="result[field].indexOf('http') !== 0") {{::result[field]}}
         tr(ng-repeat="match in result.matches track by $index")
-          td(colspan="{{::$ctrl.field.length}}",ng-bind-html="match")
+          td(ng-bind-html="match",colspan="{{::$ctrl.field.length}}")
       
     h2(ng-click="$ctrl.showRaw=!$ctrl.showRaw") Raw results
       span.glyphicon.glyphicon-chevron-down(ng-show="!$ctrl.showRaw")

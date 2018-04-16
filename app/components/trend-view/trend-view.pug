@@ -1,7 +1,7 @@
 .container
   .form-group.has-feedback(ng-class="{ 'has-success' : $ctrl.isEndpointValid === true, 'has-error' : $ctrl.isEndpointValid === false}")
     label Endpoint
-    input.form-control(type="text",ng-model="$ctrl.endpoint",ng-change="$ctrl.endpointChanged()")
+    input.form-control(ng-change="$ctrl.endpointChanged()",ng-model="$ctrl.endpoint",type="text")
     span.glyphicon.glyphicon-ok.form-control-feedback(ng-show="$ctrl.isEndpointValid")
     span.glyphicon.glyphicon-remove.form-control-feedback(ng-show="!$ctrl.isEndpointValid")
   .form-group
@@ -15,28 +15,32 @@
     textarea.form-control(ng-model="$ctrl.comparisonQuery")
   .form-group
     label Attribute
-    select.form-control(ng-model="$ctrl.attr",ng-options="attr for attr in $ctrl.attrs")
+    select.form-control(ng-model="$ctrl.attr",ng-options="attr.id as attr.id + ': ' + attr.description for attr in $ctrl.attrs")
   .form-group
     label Attribute length
-    input.form-control(type="number",ng-model="$ctrl.attrLength")
+    input.form-control(ng-model="$ctrl.attrLength",type="number")
   .form-group
     label Frequency to show
     .row: .col-xs-12
       label.radio-inline
-        input(type="radio",name="freq",ng-model="$ctrl.plotTermFreq",ng-value="false") 
+        input(name="freq",ng-model="$ctrl.plotTermFreq",ng-value="false",type="radio") 
         | document
       label.radio-inline
-        input(type="radio",name="freq",ng-model="$ctrl.plotTermFreq",ng-value="true") 
+        input(name="freq",ng-model="$ctrl.plotTermFreq",ng-value="true",type="radio") 
         | term
   .form-group
     label Frequency to show
     .row: .col-xs-12
       label.radio-inline
-        input(type="radio",name="freq2",ng-model="$ctrl.plotAbsolute",ng-value="false") 
+        input(name="freq2",ng-model="$ctrl.plotAbsolute",ng-value="false",type="radio") 
         | relative
       label.radio-inline
-        input(type="radio",name="freq2",ng-model="$ctrl.plotAbsolute",ng-value="true") 
+        input(name="freq2",ng-model="$ctrl.plotAbsolute",ng-value="true",type="radio") 
         | absolute
+  .form-group
+    label Further options
+    input.form-control(ng-model="$ctrl.furtherOptions",type="text")
+
   button.btn.btn-success(ng-click="$ctrl.runQuery()",ng-disabled="$ctrl.queryRunning") Query
   
   span.glyphicon.glyphicon-refresh(ng-show="$ctrl.queryRunning")

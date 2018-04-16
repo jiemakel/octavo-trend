@@ -6,7 +6,7 @@ var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var commonConf = {
   cache: true,
   watch: true,
-  devtool: 'cheap-module-inline-source-map',
+  devtool: 'cheap-module-eval-source-map',
   context: __dirname,
   output: {
     filename: '[name]-bundle.js'
@@ -18,8 +18,8 @@ var commonConf = {
         use: [ {
           loader: 'babel-loader',
           query: {
-            cacheDirectory: false,
-            presets: [['es2015', { 'modules': false, 'loose': true }], 'stage-0'],
+            cacheDirectory: true,
+            presets: ['env'],
             plugins: ['angularjs-annotate','transform-runtime']
           }
         }, 'ts-loader' ],
