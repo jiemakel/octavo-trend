@@ -48,8 +48,8 @@
         tr.info: td(ng-repeat="field in $ctrl.field track by $index ") 
           a(ng-href="{{result[field]}}",ng-if="result[field].indexOf('http') === 0",target="_blank") {{::result[field]}}
           span(ng-if="result[field].indexOf('http') !== 0") {{::result[field]}}
-        tr(ng-repeat="match in result.matches track by $index")
-          td(ng-bind-html="match",colspan="{{::$ctrl.field.length}}")
+        tr(ng-repeat="snippet in result.snippets track by $index")
+          td(ng-bind-html="snippet.snippet",colspan="{{::$ctrl.field.length}}")
       
     h2(ng-click="$ctrl.showRaw=!$ctrl.showRaw") Raw results
       span.glyphicon.glyphicon-chevron-down(ng-show="!$ctrl.showRaw")

@@ -9,8 +9,12 @@ import {
 } from "../octavo-component-controller";
 import { NodeStringDecoder } from "string_decoder";
 
+interface ISnippet {
+  snippet: string;
+}
+
 interface IResult {
-  matches: string[];
+  snippets: ISnippet[];
 }
 
 interface IResults {
@@ -91,7 +95,8 @@ class SearchViewComponentController extends OctavoComponentController {
           this.totalResults = response.data.results.total;
           this.results = response.data.results.docs;
           for (let doc of this.results)
-            doc.matches = doc.matches.map(this.$sce.trustAsHtml);
+            for (let snippet of doc.snippets)
+              snippet.snippet = this.$sce.trustAsHtml(snippet.snippet);
         },
         error => {
           this.queryRunning = false;
